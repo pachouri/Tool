@@ -1,0 +1,4 @@
+com\kinkars\database\sqlserver\GetPropertyValues.class
+com\kinkars\sync\info\Test.class
+com\kinkars\database\sqlserver\ConnectMSSQLServer.class
+com\kinkars\sync\info\SyncCustomerInfo.class

@@ -107,7 +107,7 @@ public class ExcelWriter {
             //M
             row.createCell(12).setCellValue("Patanjali");
             //N
-            row.createCell(13).setCellValue("catalog/Patanjali/"+productinfo.getName().replaceAll("\\s+","")+".jpg");
+            row.createCell(13).setCellValue("catalog/patanjali/"+productinfo.getName().replaceAll("\\s+","")+".jpg");
             //O
             row.createCell(14).setCellValue("yes");
             //P
