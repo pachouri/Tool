@@ -1,35 +1,50 @@
 package com.kinkars.sync.info;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.kinkars.client.rest.RestInputBuilder;
 import com.kinkars.database.sqlserver.ConnectMSSQLServer;
+import com.kinkars.database.sqlserver.GetPropertyValues;
+import com.kinkars.sync.info.sqlquery.InvoiceSQLQuery;
+import com.kinkars.sync.info.bean.ClientInfo;
 
 public class SyncCustomerInfo {
 	public void getSyncClientInfo(){
+		GetPropertyValues prop = new GetPropertyValues();
+		List<ClientInfo> ci=new ArrayList();
 		Connection conn=null;
 		conn= new ConnectMSSQLServer().dbConnect();
 		Statement statement=null;
 		try {
-			statement = conn.createStatement();
-		
-
-		String queryString = "select MasterAddressInfo.MasterCode, Master1.Name,MasterAddressInfo.Address1, MasterAddressInfo.Address2, MasterAddressInfo.Address3 from BusyComp0001_db12018.dbo.MasterAddressInfo  INNER JOIN  BusyComp0001_db12018.dbo.Master1 ON MasterAddressInfo.MasterCode=Master1.Code";
-		ResultSet rs = statement.executeQuery(queryString);
-		while (rs.next()) {
-			System.out.println(rs.getString(2));
-			System.out.println(rs.getString(1));
-			System.out.println(rs.getString(3));
-			System.out.println(rs.getString(4));
-		} 
+			statement = conn.createStatement(); 
+			String queryString = InvoiceSQLQuery.getMasterAddressInfo(prop.getPropValues().getProperty("Database"));
+			ResultSet rs = statement.executeQuery(queryString);
+			
+			while (rs.next()) {
+				ClientInfo clientInfo=new ClientInfo();
+				System.out.println(rs.getInt("MasterCode"));
+				clientInfo.setExt_client_id(rs.getInt("MasterCode"));
+				clientInfo.setClient_name(rs.getString("Name"));
+				ci.add(clientInfo);
+			} 
+			
+			
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.syncClients(ci);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 		}
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
-
 		} finally {
-
 			if (statement != null) {
 				try {
 					statement.close();
