@@ -1,11 +1,12 @@
 package com.kinkars.database.sqlserver;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
+import org.apache.log4j.Logger;
 
 public class ConnectMSSQLServer
 {
+	final static Logger logger = Logger.getLogger(ConnectMSSQLServer.class);
 	public Connection dbConnect()
 	{
 		Connection conn=null;
@@ -13,12 +14,10 @@ public class ConnectMSSQLServer
 			GetPropertyValues prop = new GetPropertyValues();
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			conn = DriverManager.getConnection(prop.getPropValues().getProperty("host"),prop.getPropValues().getProperty("username"), prop.getPropValues().getProperty("password"));
-			System.out.println("connected");
-			
+			logger.info("Database Connected");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return conn;
-		
 	}
 }

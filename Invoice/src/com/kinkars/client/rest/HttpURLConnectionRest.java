@@ -6,25 +6,20 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
+import com.kinkars.database.sqlserver.ConnectMSSQLServer;
 import com.kinkars.database.sqlserver.GetPropertyValues;
 
 public class HttpURLConnectionRest {
-
-	private static final String USER_AGENT = "Mozilla/5.0";
+	final static Logger logger = Logger.getLogger(HttpURLConnectionRest.class);
+    private static final String USER_AGENT = "Mozilla/5.0";
 
 	private static final String GET_URL = "http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/ping";
 
 	private static final String POST_URL = "http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/clients";
 
 	private static final String POST_PARAMS = "ext_client_id=9";
-
-	public static void main(String[] args) throws IOException {
-
-		sendGET();
-		System.out.println("GET DONE");
-		//	sendPOST();
-		System.out.println("POST DONE");
-	}
 
 	private static void sendGET() throws IOException {
 		URL obj = new URL(GET_URL);
@@ -45,9 +40,9 @@ public class HttpURLConnectionRest {
 			in.close();
 
 			// print result
-			System.out.println(response.toString());
+			logger.info(response.toString());
 		} else {
-			System.out.println("GET request not worked");
+			logger.info("GET request not worked");
 		}
 
 	}
@@ -72,7 +67,7 @@ public class HttpURLConnectionRest {
 		// For POST only - END
 
 		int responseCode = con.getResponseCode();
-		System.out.println("POST Response Code :: " + responseCode);
+		logger.info("POST Response Code :: " + responseCode);
 
 		if (responseCode == HttpURLConnection.HTTP_OK) { //success
 			BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -86,9 +81,10 @@ public class HttpURLConnectionRest {
 			in.close();
 
 			// print result
-			System.out.println(response.toString());
+			logger.info(response.toString());
+			
 		} else {
-			System.out.println("POST request not worked");
+			logger.info("POST request not worked");
 		}
 		return res;
 	}

@@ -11,10 +11,13 @@ import com.kinkars.database.sqlserver.ConnectMSSQLServer;
 import com.kinkars.database.sqlserver.GetPropertyValues;
 import com.kinkars.sync.info.sqlquery.InvoiceSQLQuery;
 import com.kinkars.sync.info.bean.ClientInfo;
+import com.kinkars.sync.info.bean.FamilyInfo;
+
 import org.apache.log4j.Logger;
 
 public class SyncInvoiceInfo {
 	final static Logger logger = Logger.getLogger(SyncInvoiceInfo.class);
+
 	public void getSyncClientInfo(){
 		GetPropertyValues prop = new GetPropertyValues();
 		List<ClientInfo> ci=new ArrayList<ClientInfo>();
@@ -70,6 +73,53 @@ public class SyncInvoiceInfo {
 
 		}
 	}
+
+	public void getSyncFamiliesInfo(){
+		GetPropertyValues prop = new GetPropertyValues();
+		List<FamilyInfo> fi=new ArrayList<FamilyInfo>();
+		Connection conn=null;
+		conn= new ConnectMSSQLServer().dbConnect();
+		Statement statement=null;
+		try {
+			statement = conn.createStatement(); 
+			String queryString = InvoiceSQLQuery.getParentGroup(prop.getPropValues().getProperty("Database"));
+			ResultSet rs = statement.executeQuery(queryString);
+
+			while (rs.next()) {
+				FamilyInfo familyInfo=new FamilyInfo();
+				familyInfo.setExt_family_id(rs.getInt("Code"));
+				familyInfo.setFamily_name(rs.getString("Name"));
+				fi.add(familyInfo);
+			} 
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.syncFamilies(fi);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
 }
-
-
