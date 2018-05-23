@@ -10,32 +10,35 @@ import org.apache.log4j.Logger;
 
 import com.kinkars.database.sqlserver.ConnectMSSQLServer;
 import com.kinkars.database.sqlserver.GetPropertyValues;
+import com.kinkars.sync.info.SyncInvoiceInfo;
 
 public class HttpURLConnectionRest {
 	final static Logger logger = Logger.getLogger(HttpURLConnectionRest.class);
     private static final String USER_AGENT = "Mozilla/5.0";
 
-	private static final String GET_URL = "http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/ping";
+	private static final String GET_URL = "http://localhost/invoice/public/webresources/mobile_app/payments/1";
 
 	private static final String POST_URL = "http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/clients";
 
 	private static final String POST_PARAMS = "ext_client_id=9";
 
 	private static void sendGET() throws IOException {
+		GetPropertyValues prop = new GetPropertyValues();
 		URL obj = new URL(GET_URL);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
-		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty( prop.getPropValues().getProperty("AUTH"),prop.getPropValues().getProperty("JWTOKEN"));
+		con.setRequestProperty(prop.getPropValues().getProperty("USER_KEY"), prop.getPropValues().getProperty("USER_AGENT"));
 		int responseCode = con.getResponseCode();
 		System.out.println("GET Response Code :: " + responseCode);
 		if (responseCode == HttpURLConnection.HTTP_OK) { // success
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
 
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
+				System.out.println(response);
 			}
 			in.close();
 
@@ -87,5 +90,12 @@ public class HttpURLConnectionRest {
 			logger.info("POST request not worked");
 		}
 		return res;
+	}
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		HttpURLConnectionRest sys= new HttpURLConnectionRest();
+		sys.sendGET();
+		
+		
 	}
 }

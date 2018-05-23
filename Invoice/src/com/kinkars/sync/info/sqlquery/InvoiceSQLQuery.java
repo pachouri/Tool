@@ -23,4 +23,28 @@ public class InvoiceSQLQuery {
 		logger.info("query"+ query);
 		return query;
 	}
+	
+	
+	public static String getTaxRates(String dbinfo){
+
+		String query="select Code, Name from "+dbinfo+".MASTER1 where MasterType=25 ";
+	
+		logger.info("query"+ query);
+		return query;
+	}
+	
+	public static String getUnitTypes(String dbinfo){
+
+		String query="select Code, Name from "+dbinfo+".MASTER1 where MasterType=8 ";
+
+		logger.info("query"+ query);
+		return query;
+	}
+	
+	public static String getProductInfo(String dbinfo){
+
+		String query="SELECT Code ,MasterType ,Name ,PrintName ,ParentGrp  ,CM1, CM2,CM3,CM4  ,CM5  ,CM8  ,D1 ,D2   ,D3,D4 ,D5  ,D6 FROM "+dbinfo+".Master1 where MasterType=6";
+		logger.info("query"+ query);
+		return query;
+	}
 }
