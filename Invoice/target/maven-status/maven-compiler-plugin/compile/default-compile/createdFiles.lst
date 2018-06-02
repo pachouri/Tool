@@ -1,4 +1,16 @@
+com\kinkars\client\rest\RestOutputBuilder.class
 com\kinkars\database\sqlserver\GetPropertyValues.class
+com\kinkars\sync\info\bean\ProductInfo.class
 com\kinkars\sync\info\Test.class
 com\kinkars\database\sqlserver\ConnectMSSQLServer.class
-com\kinkars\sync\info\SyncCustomerInfo.class
+com\kinkars\sync\info\bean\TaxRateInfo.class
+com\kinkars\client\rest\RestInputBuilder.class
+com\kinkars\sync\info\bean\FamilyInfo.class
+com\kinkars\sync\info\bean\UnitInfo.class
+com\kinkars\sync\info\SyncInvoiceInfo.class
+com\kinkars\sync\info\bean\PaymentInfo.class
+com\kinkars\sync\info\bean\ItemInfo.class
+com\kinkars\sync\info\bean\ClientInfo.class
+com\kinkars\sync\info\bean\InvoiceInfo.class
+com\kinkars\sync\info\sqlquery\InvoiceSQLQuery.class
+com\kinkars\client\rest\HttpURLConnectionRest.class

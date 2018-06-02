@@ -47,4 +47,30 @@ public class InvoiceSQLQuery {
 		logger.info("query"+ query);
 		return query;
 	}
+	
+	public static String insertInvoiceInfoHeader(String dbinfo){
+		String query="Insert into "+dbinfo+".TRAN1 (VchCode,VchType,Vchno,VchSeriesCode,MASTERCODE1,MASTERCODE2,STAMP,AUTOVCHNO,CM1,VCHAMTBASECUR,VCHSALEPURCAMT,ORGVCHAMTBASECUR,INPUTTYPE) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		logger.info("query"+ query);
+		return query;	
+	}
+	
+	public static String insertInvoiceInfoCompany(String dbinfo){
+		String query="Insert into "+dbinfo+".TRAN2 (RecType,Vchcode,Mastercode1,Mastercode2,SRNO,VCHTYPE,VCHNO,VCHSERIESCODE,VALUE1) VALUES (?,?,?,?,?,?,?,?,?)";
+		logger.info("query"+ query);
+		return query;	
+	}
+	
+	public static String insertInvoiceInfoItemInfo(String dbinfo){
+		String query="Insert into "+dbinfo+".TRAN2 (RecType,Vchcode,Mastercode1,Mastercode2,SRNO,VCHTYPE,VCHNO,VCHSERIESCODE,VALUE1,value2,value3,D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,CM1,CM2,CM3,CM4,CM5,CM6,CM7)"
+				+" VALUES "
+				+"(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		logger.info("query"+ query);
+		return query;	
+	}
+	public static String getNextNubmer(String dbinfo,String fieldname){
+		String query="select MAX("+fieldname+")+1 from  "+dbinfo;
+		logger.info("query"+ query);
+		return query;
+		
+	}
 }

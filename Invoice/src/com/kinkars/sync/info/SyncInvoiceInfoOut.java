@@ -18,8 +18,8 @@ import com.kinkars.sync.info.bean.UnitInfo;
 
 import org.apache.log4j.Logger;
 
-public class SyncInvoiceInfo {
-	final static Logger logger = Logger.getLogger(SyncInvoiceInfo.class);
+public class SyncInvoiceInfoOut {
+	final static Logger logger = Logger.getLogger(SyncInvoiceInfoOut.class);
 
 	public void getSyncClientInfo(){
 		GetPropertyValues prop = new GetPropertyValues();

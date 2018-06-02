@@ -1,15 +1,24 @@
 package com.kinkars.sync.info.bean;
 
 public class ItemInfo {
-	private int item_quantity;
+	private double item_quantity;
 	private double item_price;
 	private double item_discount_amount;
 	private int ext_product_id;
     private int ext_tax_id;
-	public int getItem_quantity() {
+    private int ext_unit_id;
+    
+	
+    public int getExt_unit_id() {
+		return ext_unit_id;
+	}
+	public void setExt_unit_id(int ext_unit_id) {
+		this.ext_unit_id = ext_unit_id;
+	}
+	public double getItem_quantity() {
 		return item_quantity;
 	}
-	public void setItem_quantity(int item_quantity) {
+	public void setItem_quantity(double item_quantity) {
 		this.item_quantity = item_quantity;
 	}
 	public double getItem_price() {

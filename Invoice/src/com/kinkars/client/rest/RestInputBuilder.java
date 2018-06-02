@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.kinkars.database.sqlserver.GetPropertyValues;
-import com.kinkars.sync.info.SyncInvoiceInfo;
+import com.kinkars.sync.info.SyncInvoiceInfoOut;
 import com.kinkars.sync.info.bean.ClientInfo;
 import com.kinkars.sync.info.bean.FamilyInfo;
 import com.kinkars.sync.info.bean.ProductInfo;
@@ -19,7 +19,7 @@ import com.kinkars.sync.info.bean.UnitInfo;
 
 
 public class RestInputBuilder {
-	final static Logger logger = Logger.getLogger(SyncInvoiceInfo.class);
+	final static Logger logger = Logger.getLogger(SyncInvoiceInfoOut.class);
 	public String syncClients(List<ClientInfo> clientInfo) throws IOException{
 		String result =null;
 		GetPropertyValues prop = new GetPropertyValues();
