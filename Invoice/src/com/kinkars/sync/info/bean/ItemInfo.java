@@ -5,11 +5,21 @@ public class ItemInfo {
 	private double item_price;
 	private double item_discount_amount;
 	private int ext_product_id;
-    private int ext_tax_id;
-    private int ext_unit_id;
-    
-	
-    public int getExt_unit_id() {
+	private int ext_tax_id;
+	private int ext_unit_id;
+	private double item_subtotal;
+	private double item_tax_total;
+	private double item_total;
+	private double tax_rate_percent;
+
+
+	public double getTax_rate_percent() {
+		return tax_rate_percent;
+	}
+	public void setTax_rate_percent(double tax_rate_percent) {
+		this.tax_rate_percent = tax_rate_percent;
+	}
+	public int getExt_unit_id() {
 		return ext_unit_id;
 	}
 	public void setExt_unit_id(int ext_unit_id) {
@@ -44,5 +54,23 @@ public class ItemInfo {
 	}
 	public void setExt_tax_id(int ext_tax_id) {
 		this.ext_tax_id = ext_tax_id;
+	}
+	public double getItem_subtotal() {
+		return item_subtotal;
+	}
+	public void setItem_subtotal(double item_subtotal) {
+		this.item_subtotal = item_subtotal;
+	}
+	public double getItem_tax_total() {
+		return item_tax_total;
+	}
+	public void setItem_tax_total(double item_tax_total) {
+		this.item_tax_total = item_tax_total;
+	}
+	public double getItem_total() {
+		return item_total;
+	}
+	public void setItem_total(double item_total) {
+		this.item_total = item_total;
 	}
 }

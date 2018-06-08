@@ -52,6 +52,10 @@ public class JSONReaderHandler {
             	ii.setItem_price( Double.parseDouble(jsonObjectInternal.get("item_price").toString()));
             	ii.setItem_quantity(Double.parseDouble( jsonObjectInternal.get("item_quantity").toString()));
             	ii.setExt_unit_id(Integer.parseInt(jsonObjectInternal.get("ext_unit_id").toString()));
+            	ii.setItem_subtotal(Double.parseDouble(jsonObjectInternal.get("item_subtotal").toString()));
+            	ii.setItem_tax_total(Double.parseDouble(jsonObjectInternal.get("item_tax_total").toString()));
+            	ii.setItem_total(Double.parseDouble(jsonObjectInternal.get("item_total").toString()));
+            	ii.setTax_rate_percent(Double.parseDouble(jsonObjectInternal.get("tax_rate_percent").toString()));
             	iteminfo.add(ii);
             }
             invinf.setItems(iteminfo);
