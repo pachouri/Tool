@@ -2,60 +2,73 @@ package com.kinkars.sync.info;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import org.apache.log4j.Logger;
+
+import com.kinkars.client.rest.RestInputBuilder;
 import com.kinkars.database.sqlserver.ConnectMSSQLServer;
 import com.kinkars.database.sqlserver.GetPropertyValues;
 import com.kinkars.json.reader.JSONReaderHandler;
 import com.kinkars.sync.info.bean.InvoiceInfo;
 import com.kinkars.sync.info.bean.ItemInfo;
+import com.kinkars.sync.info.bean.TaxRateInfo;
 import com.kinkars.sync.info.sqlquery.InvoiceSQLQuery;
 import com.kinkars.util.CommonUtility;
 
 public class SyncInvoiceInfoIn {
 	final static Logger logger = Logger.getLogger(SyncInvoiceInfoIn.class);
-	public static void addInvoice(){
+	public boolean addInvoice(){
 		int serialnumberRec=1;
+		boolean result = false;
+		CommonUtility comm=new CommonUtility();
 		GetPropertyValues prop = new GetPropertyValues();
 		JSONReaderHandler jsonreaderhandler= new JSONReaderHandler();
-		InvoiceInfo invoiceInfo=jsonreaderhandler.getInvoice("1");
-		CommonUtility comm=new CommonUtility();
-		invoiceInfo.getExt_client_id();
-		try {
-			int vchcode=comm.getNexValue(prop.getPropValues().getProperty("Database"), "tran1", "vchcode");
-			String vchno =comm.getVCHNOPadded("IP"+comm.getNexValue(prop.getPropValues().getProperty("Database"), "tran1", "vchcode"));
-			int autovchno=comm.getNexValue(prop.getPropValues().getProperty("Database"), "tran1", "AUTOVCHNO");
-			int companycode=invoiceInfo.getExt_client_id();
-			insertInvoiceInfoHeader(invoiceInfo.getExt_client_id(), 201,invoiceInfo.getInvoice_total(), vchcode,vchno,autovchno);
-			insertInvoiceInfoCompany(invoiceInfo.getExt_client_id(), 201,invoiceInfo.getInvoice_total(),vchcode,vchno,autovchno);
-			insertInvoiceInfoSale(invoiceInfo.getExt_client_id(), 201,invoiceInfo.getInvoice_total(),vchcode,vchno,autovchno);
-			List<ItemInfo> iteminfo=invoiceInfo.getItems();
-			for(int i=0; i<iteminfo.size(); i++){
-				System.out.println(iteminfo.get(i).getExt_tax_id());
-				insertInvoiceItems(iteminfo.get(i).getExt_product_id(), 201,iteminfo.get(i).getItem_price(),vchcode,vchno,autovchno,i,iteminfo.get(i).getItem_quantity(),iteminfo.get(i).getItem_price(),companycode,iteminfo.get(i).getExt_tax_id(),iteminfo.get(i).getExt_unit_id());
-				// insertInvoiceInfoTax(int mastercode1, String vchno,int serialnumber,double taxrate, double totalvalue,double taxvalue )
-				if(iteminfo.get(i).getTax_rate_percent() > 0){
-				
-					//CGST
-					String CGST=prop.getPropValues().getProperty("CGST");
-					String SGST=prop.getPropValues().getProperty("SGST");
-				   insertInvoiceInfoTax(Integer.parseInt(CGST),vchno, serialnumberRec++, iteminfo.get(i).getTax_rate_percent()/2,  iteminfo.get(i).getItem_subtotal()/2, iteminfo.get(i).getItem_tax_total()/2 );
-				    //SGST
-				    insertInvoiceInfoTax(Integer.parseInt(SGST),vchno, serialnumberRec++, iteminfo.get(i).getTax_rate_percent()/2,  iteminfo.get(i).getItem_subtotal()/2, iteminfo.get(i).getItem_tax_total()/2 );
+		int nextinvoice =comm.getNextRecordToBeMigrate(1);
+		InvoiceInfo invoiceInfo=jsonreaderhandler.getInvoice(Integer.toString(nextinvoice));
+
+		if(invoiceInfo != null){
+			result = true;
+			invoiceInfo.getExt_client_id();
+			try {
+				int vchcode=comm.getNexValue(prop.getPropValues().getProperty("Database"), "tran1", "vchcode");
+				String vchno =comm.getVCHNOPadded(prop.getPropValues().getProperty("INOVICENAMEPREFIX")+"-"+invoiceInfo.getInvoice_id()+"-"+comm.getNexValue(prop.getPropValues().getProperty("Database"), "tran1", "vchcode"));
+				int autovchno=comm.getNexValue(prop.getPropValues().getProperty("Database"), "tran1", "AUTOVCHNO");
+				int companycode=invoiceInfo.getExt_client_id();
+				insertInvoiceInfoHeader(invoiceInfo.getExt_client_id(), 201,invoiceInfo.getInvoice_total(), vchcode,vchno,autovchno);
+				insertInvoiceInfoCompany(invoiceInfo.getExt_client_id(), 201,invoiceInfo.getInvoice_total(),vchcode,vchno,autovchno);
+				insertInvoiceInfoSale(invoiceInfo.getExt_client_id(), 201,invoiceInfo.getInvoice_total(),vchcode,vchno,autovchno);
+				List<ItemInfo> iteminfo=invoiceInfo.getItems();
+				for(int i=0; i<iteminfo.size(); i++){
+					System.out.println(iteminfo.get(i).getExt_tax_id());
+					insertInvoiceItems(iteminfo.get(i).getExt_product_id(), 201,iteminfo.get(i).getItem_price(),vchcode,vchno,autovchno,i,iteminfo.get(i).getItem_quantity(),iteminfo.get(i).getItem_price(),companycode,iteminfo.get(i).getExt_tax_id(),iteminfo.get(i).getExt_unit_id());
+					// insertInvoiceInfoTax(int mastercode1, String vchno,int serialnumber,double taxrate, double totalvalue,double taxvalue )
+					if(iteminfo.get(i).getTax_rate_percent() > 0){
+
+						//CGST
+						String CGST=prop.getPropValues().getProperty("CGST");
+						String SGST=prop.getPropValues().getProperty("SGST");
+						insertInvoiceInfoTax(Integer.parseInt(CGST),vchcode,vchno, serialnumberRec++, iteminfo.get(i).getTax_rate_percent()/2,  iteminfo.get(i).getItem_subtotal()/2, iteminfo.get(i).getItem_tax_total()/2 );
+						//SGST
+						insertInvoiceInfoTax(Integer.parseInt(SGST),vchcode,vchno, serialnumberRec++, iteminfo.get(i).getTax_rate_percent()/2,  iteminfo.get(i).getItem_subtotal()/2, iteminfo.get(i).getItem_tax_total()/2 );
+					}
 				}
+			} catch ( IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch ( IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}else{
+			result =false;
 		}
-
-
+		return result;
 	}
 	//Tran1 Insert
 	public static void insertInvoiceInfoHeader(int mastercode1, int mastercode2,double amount, int vchcode,String vchno,int autovchno) throws SQLException {
@@ -189,7 +202,7 @@ public class SyncInvoiceInfoIn {
 			}
 		}
 	}
-	
+
 	public static void insertInvoiceItems(int mastercode1, int mastercode2,double amount, int vchcode,String vchno,int autovchno, int serialnumber,double quantity,double price, int companycode, int taxcode, int unit_id) throws SQLException {
 		GetPropertyValues prop = new GetPropertyValues();
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -249,9 +262,9 @@ public class SyncInvoiceInfoIn {
 			}
 		}
 	}
-	
-	
-	public static void insertInvoiceInfoTax(int mastercode1, String vchno,int serialnumber,double taxrate, double totalvalue,double taxvalue ) throws SQLException {
+
+
+	public static void insertInvoiceInfoTax(int mastercode1, int vchcode,String vchno,int serialnumber,double taxrate, double totalvalue,double taxvalue ) throws SQLException {
 		GetPropertyValues prop = new GetPropertyValues();
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		Connection conn=null;
@@ -263,7 +276,7 @@ public class SyncInvoiceInfoIn {
 			String insertTableSQL = InvoiceSQLQuery.insertInvoiceInfoTax(prop.getPropValues().getProperty("Database"));
 			preparedStatement = conn.prepareStatement(insertTableSQL);
 			preparedStatement.setInt(1, 3);//RecType
-			preparedStatement.setInt(2, 0);//vchcode
+			preparedStatement.setInt(2, vchcode);//vchcode
 			preparedStatement.setInt(3, mastercode1);//mastercode1-SGST-CGST
 			preparedStatement.setInt(4, 0);//mastercode2
 			preparedStatement.setInt(5, serialnumber);//SRNIO//Change// everyline
@@ -276,7 +289,6 @@ public class SyncInvoiceInfoIn {
 			preparedStatement.setDouble(12, taxvalue);//	value3 Tax Value
 			preparedStatement.executeUpdate();
 			logger.info("Record is inserted into DBUSER table!");
-
 		}
 		catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -292,11 +304,4 @@ public class SyncInvoiceInfoIn {
 			}
 		}
 	}
-
-	public static void main(String [] args){
-		SyncInvoiceInfoIn.addInvoice();
-
-	}
-
-
 }

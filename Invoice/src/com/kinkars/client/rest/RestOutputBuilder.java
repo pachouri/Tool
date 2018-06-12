@@ -15,4 +15,12 @@ public class RestOutputBuilder {
 		result=HttpURLConnectionRest.sendGET(url);
 		return result;
 	}
+	public String syncPayment(String id) throws IOException{
+		String result =null;
+		String APIName="payments";
+		GetPropertyValues prop = new GetPropertyValues();
+		String url=(prop.getPropValues().getProperty("BASE_URL"))+""+APIName+"/"+id;
+		result=HttpURLConnectionRest.sendGET(url);
+		return result;
+	}
 }

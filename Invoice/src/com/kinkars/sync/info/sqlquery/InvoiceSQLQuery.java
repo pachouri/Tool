@@ -78,5 +78,32 @@ public class InvoiceSQLQuery {
 		logger.info("query"+ query);
 		return query;	
 	}
+	public static String getNextRecordToBeMigrateInvoice(String dbinfo){
+		String query=" select VchNo from "+dbinfo+".Tran1 where Date = (select MAX(DATE) from "+dbinfo+".Tran1 where vchtype=9 )";
+		logger.info("query"+ query);
+		return query;	
+	}
+	
+	public static String getNextRecordToBeMigratePayment(String dbinfo){
+		String query=" select VchNo from "+dbinfo+".Tran1 where Date = (select MAX(DATE) from "+dbinfo+".Tran1 where vchtype=14)";
+		logger.info("query"+ query);
+		return query;	
+	}
+	
+	public static String insertPaymentInfoHeader(String dbinfo){
+		String query="Insert into "+dbinfo+".TRAN1 (VchCode,VchType,Date,StockUpdationDate,Vchno,VchSeriesCode,MASTERCODE1,MASTERCODE2,STAMP,AUTOVCHNO,VCHAMTBASECUR,ORGVCHAMTBASECUR) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+		logger.info("query"+ query);
+		return query;	
+	}
+	public static String insertPaymentInfoDetail(String dbinfo){
+		String query="Insert into "+dbinfo+".TRAN2 (RecType,Vchcode,Mastercode1,Mastercode2,SRNO,VCHTYPE,VCHNO,VCHSERIESCODE,VALUE1,date,cashflow) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		logger.info("query"+ query);
+		return query;	
+	}
+	public static String getClientID(String dbinfo){
+		String query=" select VchNo,MasterCode1 from "+dbinfo+".Tran1 where  vchtype=9 ";
+		logger.info("query"+ query);
+		return query;	
+	}
 	
 }
