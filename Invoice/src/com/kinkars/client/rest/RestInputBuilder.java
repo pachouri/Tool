@@ -28,12 +28,14 @@ public class RestInputBuilder {
 			ClientInfo ci=clientInfo.get(i);
 			
 			logger.info("Param"+ "ext_client_id="+ci.getExt_client_id()+"&client_name="+ci.getClient_name());
+			System.out.println("Test is going on"+"ext_client_id="+ci.getExt_client_id()+"&client_name="+ci.getClient_name());
 			result=HttpURLConnectionRest.sendPOST(url, "ext_client_id="+ci.getExt_client_id()+"&client_name="+ci.getClient_name()+"&client_address_1="+ci.getClient_address_1()
 			+"&client_address_2="+ci.getClient_address_2()+"&client_phone="+ci.getClient_phone()
 			+"&client_fax="+ci.getClient_fax()+"&client_email="+ci.getClient_mobile()+
 			"&client_vat_id="+ci.getClient_vat_id()
 		    );
 		}
+		System.out.println("Test Result"+result);
 		return result;
 	}
 	public String syncFamilies(List<FamilyInfo> familyInfo) throws IOException{

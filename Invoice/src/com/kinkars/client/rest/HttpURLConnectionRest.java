@@ -72,6 +72,7 @@ public class HttpURLConnectionRest {
 
 		int responseCode = con.getResponseCode();
 		logger.info("POST Response Code :: " + responseCode);
+		System.out.println("POST Response Code :: " + responseCode);
 
 		if (responseCode == HttpURLConnection.HTTP_OK) { //success
 			BufferedReader in = new BufferedReader(new InputStreamReader(
