@@ -77,7 +77,7 @@ public class SyncInvoiceInfoOut {
 		}
 	}
 
-	public void getSyncFamiliesInfo(){
+	public void getSyncFamiliesInfo(String feildName, int ParentID){
 		GetPropertyValues prop = new GetPropertyValues();
 		List<FamilyInfo> fi=new ArrayList<FamilyInfo>();
 		Connection conn=null;
@@ -88,10 +88,10 @@ public class SyncInvoiceInfoOut {
 			String queryString = InvoiceSQLQuery.getParentGroup(prop.getPropValues().getProperty("Database"));
 			ResultSet rs = statement.executeQuery(queryString);
 
-			while (rs.next()) {
+			while (rs.next()) { 
 				FamilyInfo familyInfo=new FamilyInfo();
-				familyInfo.setExt_family_id(rs.getInt("Code"));
-				familyInfo.setFamily_name(rs.getString("Name"));
+				familyInfo.setExt_family_id(ParentID);
+				familyInfo.setFamily_name(rs.getString(feildName));
 				fi.add(familyInfo);
 			} 
 			RestInputBuilder rib=new RestInputBuilder();
@@ -125,6 +125,58 @@ public class SyncInvoiceInfoOut {
 
 		}
 	}
+	
+	public void updateSubCategory(String feildName, int ParentID){
+		GetPropertyValues prop = new GetPropertyValues();
+		List<FamilyInfo> fi=new ArrayList<FamilyInfo>();
+		Connection conn=null;
+		conn= new ConnectMSSQLServer().dbConnect();
+		Statement statement=null;
+		try {
+			statement = conn.createStatement(); 
+			String queryString = InvoiceSQLQuery.getParentGroup(prop.getPropValues().getProperty("Database"));
+			ResultSet rs = statement.executeQuery(queryString);
+
+			while (rs.next()) { 
+				FamilyInfo familyInfo=new FamilyInfo();
+				familyInfo.setExt_family_id(rs.getInt("MasterCode"));
+				familyInfo.setFamily_name(rs.getString(feildName));
+				fi.add(familyInfo);
+			} 
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.updateSubCategory(fi);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+	
+	
+	
 	
 	public void getSyncTaxRate(){
 		GetPropertyValues prop = new GetPropertyValues();
@@ -231,7 +283,174 @@ public class SyncInvoiceInfoOut {
 
 		}
 	}
+	public void updateProductPriceInfo(){
+		GetPropertyValues prop = new GetPropertyValues();
+		List<ProductInfo> pi=new ArrayList<ProductInfo>();
+		Connection conn=null;
+		conn= new ConnectMSSQLServer().dbConnect();
+		Statement statement=null;
+		try {
+			statement = conn.createStatement(); 
+			String queryString = InvoiceSQLQuery.getProductInfo(prop.getPropValues().getProperty("Database"));
+			ResultSet rs = statement.executeQuery(queryString);
+
+			while (rs.next()) {
+				ProductInfo productInfo=new ProductInfo();
+				productInfo.setExt_product_id(rs.getInt("code"));//Code
+				productInfo.setProduct_name(rs.getString("Name"));//Name
+				productInfo.setProduct_description(rs.getString("Name"));//Description
+				productInfo.setUnit_id(rs.getString("CM1"));//UnitType
+				productInfo.setPurchase_price(rs.getString("D4"));//Purchase Price
+				productInfo.setProduct_price(rs.getString("D3"));//Sale Price
+				productInfo.setTax_rate_id(rs.getString("CM8"));//tax Rate
+				productInfo.setProduct_family_id(rs.getString("ParentGrp"));//Family
+				pi.add(productInfo);
+			} 
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.updatePrice(pi);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
 	
+	public void updateSubCategory(){
+		GetPropertyValues prop = new GetPropertyValues();
+		List<ProductInfo> pi=new ArrayList<ProductInfo>();
+		Connection conn=null;
+		conn= new ConnectMSSQLServer().dbConnect();
+		Statement statement=null;
+		try {
+			statement = conn.createStatement(); 
+			String queryString = InvoiceSQLQuery.getProductInfo(prop.getPropValues().getProperty("Database"));
+			ResultSet rs = statement.executeQuery(queryString);
+
+			while (rs.next()) {
+				ProductInfo productInfo=new ProductInfo();
+				productInfo.setExt_product_id(rs.getInt("code"));//Code
+				productInfo.setProduct_name(rs.getString("Name"));//Name
+				productInfo.setProduct_description(rs.getString("Name"));//Description
+				productInfo.setUnit_id(rs.getString("CM1"));//UnitType
+				productInfo.setPurchase_price(rs.getString("D4"));//Purchase Price
+				productInfo.setProduct_price(rs.getString("D3"));//Sale Price
+				productInfo.setTax_rate_id(rs.getString("CM8"));//tax Rate
+				productInfo.setProduct_family_id(rs.getString("ParentGrp"));//Family
+				pi.add(productInfo);
+			} 
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.syncProducts(pi);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+	
+	public void updateNewArrival(){
+		GetPropertyValues prop = new GetPropertyValues();
+		List<ProductInfo> pi=new ArrayList<ProductInfo>();
+		Connection conn=null;
+		conn= new ConnectMSSQLServer().dbConnect();
+		Statement statement=null;
+		try {
+			statement = conn.createStatement(); 
+			String queryString = InvoiceSQLQuery.getProductInfoTop200(prop.getPropValues().getProperty("Database"));
+			ResultSet rs = statement.executeQuery(queryString);
+
+			while (rs.next()) {
+				ProductInfo productInfo=new ProductInfo();
+				productInfo.setExt_product_id(rs.getInt("code"));//Code
+				productInfo.setProduct_name(rs.getString("Name"));//Name
+				productInfo.setProduct_description(rs.getString("Name"));//Description
+				productInfo.setUnit_id(rs.getString("CM1"));//UnitType
+				productInfo.setPurchase_price(rs.getString("D4"));//Purchase Price
+				productInfo.setProduct_price(rs.getString("D3"));//Sale Price
+				productInfo.setTax_rate_id(rs.getString("CM8"));//tax Rate
+				productInfo.setProduct_family_id(rs.getString("ParentGrp"));//Family
+				pi.add(productInfo);
+			} 
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.updateNewArrival(pi);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+	public void deleteNewArrivalCategory() throws IOException{
+			RestInputBuilder rib=new RestInputBuilder();
+			rib.deleteNewArrival();
+	}
 	public void getSyncUnits(){
 		GetPropertyValues prop = new GetPropertyValues();
 		List<UnitInfo> ui=new ArrayList<UnitInfo>();

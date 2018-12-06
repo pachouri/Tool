@@ -41,11 +41,11 @@ public class RestInputBuilder {
 	public String syncFamilies(List<FamilyInfo> familyInfo) throws IOException{
 		String result =null;
 		GetPropertyValues prop = new GetPropertyValues();
-		String url=(prop.getPropValues().getProperty("BASE_URL"))+"families";
+		String url=(prop.getPropValues().getProperty("BASE_URL"))+"categories";
 		for(int i=0; i<familyInfo.size(); i++){
 			FamilyInfo fi=familyInfo.get(i);
-			logger.info("Param"+ "ext_family_id="+fi.getExt_family_id()+"&family_name="+fi.getFamily_name());
-			result=HttpURLConnectionRest.sendPOST(url, "ext_family_id="+fi.getExt_family_id()+"&family_name="+fi.getFamily_name());
+			logger.info("Param"+ "parent_id="+fi.getExt_family_id()+"&childCategoryName="+fi.getFamily_name());
+			result=HttpURLConnectionRest.sendPOST(url, "parent_id="+fi.getExt_family_id()+"&childCategoryName="+fi.getFamily_name());
 		}
 		return result;
 	}
@@ -89,6 +89,63 @@ public class RestInputBuilder {
 			+"&tax_rate_id="+pi.getTax_rate_id()+"&unit_id="+pi.getUnit_id()+
 			"&family_id="+pi.getProduct_family_id()
 		    );
+		}
+		return result;
+	}
+	
+	public String updatePrice(List<ProductInfo> productInfo) throws IOException{
+		String result =null;
+		GetPropertyValues prop = new GetPropertyValues();
+		String url=(prop.getPropValues().getProperty("BASE_URL"))+"price";
+		for(int i=0; i<productInfo.size(); i++){
+			ProductInfo pi=productInfo.get(i);
+			
+			logger.info("Param"+ "ext_product_id="+pi.getExt_product_id()+"&product_name="+pi.getProduct_name());
+			
+			result=HttpURLConnectionRest.sendPOST(url, "ext_product_id="+pi.getExt_product_id()+"&product_name="+pi.getProduct_name()+"&product_description="+pi.getProduct_description()
+			+"&product_price="+pi.getProduct_price()+"&purchase_price="+pi.getProduct_price()
+			+"&tax_rate_id="+pi.getTax_rate_id()+"&unit_id="+pi.getUnit_id()+
+			"&family_id="+pi.getProduct_family_id()
+		    );
+		}
+		return result;
+	}
+	
+	
+	public String updateNewArrival(List<ProductInfo> productInfo) throws IOException{
+		String result =null;
+		GetPropertyValues prop = new GetPropertyValues();
+		String url=(prop.getPropValues().getProperty("BASE_URL"))+"newarrival";
+		for(int i=0; i<productInfo.size(); i++){
+			ProductInfo pi=productInfo.get(i);
+			
+			logger.info("Param"+ "ext_product_id="+pi.getExt_product_id()+"&product_name="+pi.getProduct_name());
+			
+			result=HttpURLConnectionRest.sendPOST(url, "ext_product_id="+pi.getExt_product_id()+"&product_name="+pi.getProduct_name()+"&product_description="+pi.getProduct_description()
+			+"&product_price="+pi.getProduct_price()+"&purchase_price="+pi.getProduct_price()
+			+"&tax_rate_id="+pi.getTax_rate_id()+"&unit_id="+pi.getUnit_id()+
+			"&family_id="+pi.getProduct_family_id()
+		    );
+		}
+		return result;
+	}
+	
+	public String deleteNewArrival() throws IOException{
+		String result =null;
+		GetPropertyValues prop = new GetPropertyValues();
+		String url=(prop.getPropValues().getProperty("BASE_URL"))+"newarrivaldel";
+			//logger.info("Param"+ "ext_product_id="+pi.getExt_product_id()+"&product_name="+pi.getProduct_name());
+			result=HttpURLConnectionRest.sendPOST(url,"");
+		return result;
+	}
+	public String updateSubCategory(List<FamilyInfo> familyInfo) throws IOException{
+		String result =null;
+		GetPropertyValues prop = new GetPropertyValues();
+		String url=(prop.getPropValues().getProperty("BASE_URL"))+"subcategories";
+		for(int i=0; i<familyInfo.size(); i++){
+			FamilyInfo fi=familyInfo.get(i);
+			logger.info("Param"+ "ext_product_id="+fi.getExt_family_id()+"&category_name="+fi.getFamily_name());
+			result=HttpURLConnectionRest.sendPOST(url, "ext_product_id="+fi.getExt_family_id()+"&category_name="+fi.getFamily_name());
 		}
 		return result;
 	}

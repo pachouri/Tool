@@ -18,6 +18,14 @@ public class InvoiceSQLQuery {
 	
 	public static String getParentGroup(String dbinfo){
 
+		//String query="select Code, Name from "+dbinfo+".MASTER1 where MasterType=5 ";
+		String query="SELECT OF1,  OF3, MasterCode FROM "+dbinfo+".MasterAddressInfo A , "+dbinfo+".Master1 B Where b.Code = a.MasterCode and b.MasterType=6";
+		logger.info("query"+ query);
+		return query;
+	}
+	
+	public static String getOptionalField(String dbinfo){
+
 		String query="select Code, Name from "+dbinfo+".MASTER1 where MasterType=5 ";
 		
 		logger.info("query"+ query);
@@ -48,6 +56,12 @@ public class InvoiceSQLQuery {
 		return query;
 	}
 	
+	public static String getProductInfoTop200(String dbinfo){
+
+		String query="SELECT TOP 200 Code ,MasterType ,Name ,PrintName ,ParentGrp  ,CM1, CM2,CM3,CM4  ,CM5  ,CM8  ,D1 ,D2   ,D3,D4 ,D5  ,D6 FROM "+dbinfo+".Master1 where MasterType=6 order by  Code desc";
+		logger.info("query"+ query);
+		return query;
+	}
 	public static String insertInvoiceInfoHeader(String dbinfo){
 		String query="Insert into "+dbinfo+".TRAN1 (VchCode,VchType,Date,StockUpdationDate,Vchno,VchSeriesCode,MASTERCODE1,MASTERCODE2,STAMP,AUTOVCHNO,CM1,VCHAMTBASECUR,VCHSALEPURCAMT,ORGVCHAMTBASECUR,INPUTTYPE) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		logger.info("query"+ query);

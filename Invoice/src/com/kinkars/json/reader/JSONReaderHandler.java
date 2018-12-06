@@ -63,11 +63,17 @@ public class JSONReaderHandler {
 			invinf.setItems(iteminfo);
 			invoiceinfo=invinf;
 
-		} catch (IOException | ParseException e) {
+		} catch ( ParseException e) {
 			// TODO Auto-generated catch block
 			invoiceinfo=null;
 			logger.error(e.getMessage());
 		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			invoiceinfo=null;
+			logger.error(e.getMessage());
+		}
+		
 		return invoiceinfo;
 	}
 
